@@ -10,10 +10,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.dto.EndpointHitDto;
 
 public class StatsClient {
     protected final RestTemplate rest;
@@ -35,19 +35,17 @@ public class StatsClient {
         return makeAndSendRequest(HttpMethod.GET, "/stats", parameters, null);
     }
 
-    protected <T> ResponseEntity<Object> create(EndpointHitDto body) {
+    protected <T> ResponseEntity<Object> create(T body) {
         return makeAndSendRequest(HttpMethod.POST, "/hit",null, body);
     }
 
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method,
                                                           String path,
-                                                          Map<String, Object> parameters,
-                                                          T body) {
-        HttpEntity<T> requestEntity;
+                                                          @Nullable Map<String, Object> parameters,
+                                                          @Nullable T body) {
+        HttpEntity<T> requestEntity = null;
         if (body != null) {
             requestEntity = new HttpEntity<>(body);
-        } else {
-            requestEntity = new HttpEntity<>(null);
         }
 
         ResponseEntity<Object> statsServerResponse;
