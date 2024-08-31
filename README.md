@@ -1,2 +1,7 @@
 # java-explore-with-me
-Template repository for ExploreWithMe project.
+
+## stat_svc
+#### Функционал:
+
+- Создание запроса о посещении и сохранение в базу данных;
+- Создание статистики на основе данных о посещениях.
