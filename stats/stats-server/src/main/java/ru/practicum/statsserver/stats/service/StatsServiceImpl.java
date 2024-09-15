@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.statsserver.stats.exception.exception.BadRequestException;
 import ru.practicum.statsserver.stats.mapper.EndpointHitMapper;
 import ru.practicum.statsserver.stats.model.EndpointHit;
 import ru.practicum.statsserver.stats.repository.StatsRepository;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final StatsRepository statsRepository;
     private final EndpointHitMapper endpointHitMapper;
 
@@ -37,24 +36,25 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStatsDto> getStats(String start,
-                                       String end,
+    public List<ViewStatsDto> getStats(LocalDateTime start,
+                                       LocalDateTime end,
                                        List<String> uris,
                                        boolean unique) {
         log.info("StatsService: Beginning of method execution getStats().");
-        log.info("StatsService.getStats(): Parsing date time.");
-        LocalDateTime startTime = LocalDateTime.parse(start, DATE_TIME_FORMATTER);
-        LocalDateTime endTime = LocalDateTime.parse(end, DATE_TIME_FORMATTER);
 
         List<EndpointHit> hits = new ArrayList<>();
+
+        if (start.isAfter(end)) {
+            throw new BadRequestException("The start date must be earlier than the end date.");
+        }
 
         log.info("StatsService.getStats(): Checking for the existence of a uris list.");
         if (uris != null && !uris.isEmpty()) {
             log.info("StatsService.getStats(): Getting hits with uris list.");
-            hits.addAll(statsRepository.findByTimestampBetweenAndUriIn(startTime, endTime, uris));
+            hits.addAll(statsRepository.findByTimestampBetweenAndUriIn(start, end, uris));
         } else {
             log.info("StatsService.getStats(): Getting hits without uris list.");
-            hits.addAll(statsRepository.findByTimestampBetween(startTime, endTime));
+            hits.addAll(statsRepository.findByTimestampBetween(start, end));
         }
 
         log.info("StatsService.getStats(): Checking for the existence of a unique parameter.");
