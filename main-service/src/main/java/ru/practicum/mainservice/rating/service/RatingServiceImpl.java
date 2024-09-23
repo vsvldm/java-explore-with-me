@@ -64,7 +64,7 @@ public class RatingServiceImpl implements RatingService {
         rating = ratingRepository.save(rating);
 
         log.info("{}.{}: Calculating event rating", colorizeClass("RatingService"), colorizeMethod("create()"));
-        double eventRating = Math.round(ratingRepository.avgRatingByEvent(event) + 100.0) / 100.0 ;
+        double eventRating = Math.round(ratingRepository.avgRatingByEvent(event) + 100.0) / 100.0;
         event.setRating(eventRating);
         log.info("{}.{}: Saving event with updated rating", colorizeClass("RatingService"), colorizeMethod("create()"));
         eventRepository.save(event);
