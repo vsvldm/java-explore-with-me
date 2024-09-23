@@ -95,7 +95,7 @@ public class EventSpecification {
                                                         EventSortType sortType) {
         LocalDateTime now = LocalDateTime.now();
 
-        return Specification.where(sortType.equals(EventSortType.RATING) ? onlyCompleted() : onlyPublished())
+        return Specification.where(sortType == null || !sortType.equals(EventSortType.RATING) ? onlyPublished() : onlyCompleted())
                 .and(searchText(text))
                 .and(hasCategories(categories))
                 .and(isPaid(paid))
