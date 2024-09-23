@@ -1,6 +1,7 @@
 package ru.practicum.mainservice.event.model;
 
-public enum SortType {
+public enum EventSortType {
     EVENT_DATE,
-    VIEWS
+    VIEWS,
+    RATING
 }

@@ -123,6 +123,17 @@ public class ErrorHandler {
         );
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleStateConflictException(final StateConflictException e) {
+        getLog(e,"ConflictException");
+        return new ApiError(
+                HttpStatus.CONFLICT,
+                "Invalid event state.",
+                e.getMessage()
+        );
+    }
+
     private void getLog(RuntimeException e, String exceptionName) {
         StackTraceElement[] stackTrace = e.getStackTrace();
         if (stackTrace.length > 0) {
