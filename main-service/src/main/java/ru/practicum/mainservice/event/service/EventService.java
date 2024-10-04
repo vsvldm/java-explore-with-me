@@ -3,7 +3,7 @@ package ru.practicum.mainservice.event.service;
 import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.mainservice.event.dto.*;
 import ru.practicum.mainservice.event.model.State;
-import ru.practicum.mainservice.event.model.SortType;
+import ru.practicum.mainservice.event.model.EventSortType;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public interface EventService {
                                   LocalDateTime rangeStart,
                                   LocalDateTime rangeEnd,
                                   Boolean onlyAvailable,
-                                  SortType sort,
+                                  EventSortType sort,
                                   Integer from,
                                   Integer size, HttpServletRequest request);
 
@@ -39,7 +39,9 @@ public interface EventService {
 
     EventFullDto getFullEventByIdForCurrentUser(Long userId, Long eventId);
 
-    EventFullDto updateByCurrentUser(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest);
+    EventFullDto updateByCurrentUser(Long userId,
+                                     Long eventId,
+                                     UpdateEventUserRequest updateEventUserRequest);
 
     List<ParticipationRequestDto> getRequestsByCurrentUser(Long userId, Long eventId);
 

@@ -3,6 +3,7 @@ package ru.practicum.mainservice.event.specification;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.mainservice.event.model.Event;
+import ru.practicum.mainservice.event.model.EventSortType;
 import ru.practicum.mainservice.event.model.State;
 
 import java.time.LocalDateTime;
@@ -43,6 +44,10 @@ public class EventSpecification {
         return (root, query, builder) -> builder.equal(root.get("state"), State.PUBLISHED);
     }
 
+    public static Specification<Event> onlyCompleted() {
+        return (root, query, builder) -> builder.equal(root.get("state"), State.COMPLETED);
+    }
+
     public static Specification<Event> searchText(String text) {
         return (root, query, builder) -> {
             if (text == null || text.isEmpty()) {
@@ -81,13 +86,18 @@ public class EventSpecification {
                 .and(beforeRangeEnd(rangeEnd));
     }
 
-    public static Specification<Event> getPublicFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable) {
+    public static Specification<Event> getPublicFilters(String text,
+                                                        List<Long> categories,
+                                                        Boolean paid,
+                                                        LocalDateTime rangeStart,
+                                                        LocalDateTime rangeEnd,
+                                                        Boolean onlyAvailable,
+                                                        EventSortType sortType) {
         LocalDateTime now = LocalDateTime.now();
 
-        return Specification.where(onlyPublished())
+        return Specification.where(sortType == null || !sortType.equals(EventSortType.RATING) ? onlyPublished() : onlyCompleted())
                 .and(searchText(text))
                 .and(hasCategories(categories))
-                .and(onlyPublished())
                 .and(isPaid(paid))
                 .and(rangeStart != null ? afterRangeStart(rangeStart) : afterRangeStart(now))
                 .and(beforeRangeEnd(rangeEnd))

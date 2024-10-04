@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.EventShortDto;
-import ru.practicum.mainservice.event.model.SortType;
+import ru.practicum.mainservice.event.model.EventSortType;
 import ru.practicum.mainservice.event.service.EventService;
 
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class EventPublicController {
                                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
                                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                          @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-                                         @RequestParam(required = false) SortType sort,
+                                         @RequestParam(required = false) EventSortType sort,
                                          @RequestParam(defaultValue = "0") Integer from,
                                          @RequestParam(defaultValue = "10") Integer size,
                                          HttpServletRequest request) {
